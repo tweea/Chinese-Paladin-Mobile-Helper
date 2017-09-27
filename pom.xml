@@ -67,6 +67,22 @@
 	</dependencies>
 
 	<!-- 构建设置 -->
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>1.5.7.RELEASE</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 
 	<!-- 项目信息 -->
 	<name>Tweea :: 仙剑手游工具</name>
