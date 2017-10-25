@@ -6,7 +6,7 @@ package cn.tweea.chinesepaladinmobile;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -23,7 +23,7 @@ import org.springframework.core.io.Resource;
 
 public class DataFiles {
 	public static Map<Integer, CardGrade> loadCardGrade(Resource source) {
-		Map<Integer, CardGrade> grades = new HashMap<>();
+		Map<Integer, CardGrade> grades = new LinkedHashMap<>();
 
 		try (Workbook workbook = WorkbookFactory.create(source.getInputStream())) {
 			for (Sheet sheet : workbook) {
@@ -62,6 +62,78 @@ public class DataFiles {
 		}
 
 		return grades;
+	}
+
+	public static Map<String, CardDefinition> loadCardDefinition(Resource source, Map<Integer, CardGrade> grades) {
+		Map<String, CardDefinition> definitions = new LinkedHashMap<>();
+
+		try (Workbook workbook = WorkbookFactory.create(source.getInputStream())) {
+			for (Sheet sheet : workbook) {
+				CardGrade grade = grades.get(Integer.valueOf(sheet.getSheetName()));
+
+				int maxRowNumber = getRowNumber(sheet, 1, 0, "合计") - 1;
+				for (int rowNumber = 1; rowNumber <= maxRowNumber; rowNumber++) {
+					Row row = sheet.getRow(rowNumber);
+					String name = getCellStringValue(row, 0);
+					if (name == null) {
+						throw new ConfigurationRuntimeException("CardDefinitionName");
+					}
+
+					definitions.put(name, new CardDefinition(name, grade));
+				}
+			}
+			for (Sheet sheet : workbook) {
+				Map<String, Integer> dependencyTypeNameIndex = buildTitleIndex(sheet, 3);
+				Integer 云裳ColumnNumber = dependencyTypeNameIndex.remove("云裳");
+				Map<CardDependencyType, Integer> dependencyTypeIndex = new EnumMap<>(CardDependencyType.class);
+				for (Map.Entry<String, Integer> dependencyTypeNameEntry : dependencyTypeNameIndex.entrySet()) {
+					String dependencyTypeName = dependencyTypeNameEntry.getKey();
+					Integer dependencyTypeColumnNumber = dependencyTypeNameEntry.getValue();
+
+					CardDependencyType dependencyType = CardDependencyType.valueOf(dependencyTypeName);
+					if (dependencyType == null) {
+						throw new ConfigurationRuntimeException("CardDependencyType");
+					}
+
+					dependencyTypeIndex.put(dependencyType, dependencyTypeColumnNumber);
+				}
+
+				int maxRowNumber = getRowNumber(sheet, 1, 0, "合计") - 1;
+				for (int rowNumber = 1; rowNumber <= maxRowNumber; rowNumber++) {
+					Row row = sheet.getRow(rowNumber);
+					String name = getCellStringValue(row, 0);
+					CardDefinition definition = definitions.get(name);
+
+					for (Map.Entry<CardDependencyType, Integer> dependencyTypeEntry : dependencyTypeIndex.entrySet()) {
+						CardDependencyType dependencyType = dependencyTypeEntry.getKey();
+						Integer dependencyTypeColumnNumber = dependencyTypeEntry.getValue();
+
+						String dependencyName = getCellStringValue(row, dependencyTypeColumnNumber);
+						if (dependencyName == null) {
+							continue;
+						}
+
+						CardDefinition dependency = definitions.get(dependencyName);
+						if (dependency == null) {
+							throw new ConfigurationRuntimeException("CardDependencyName");
+						}
+
+						definition.getDependencies().put(dependencyType, dependency);
+					}
+
+					if (云裳ColumnNumber != null) {
+						String 云裳数量String = getCellStringValue(row, 云裳ColumnNumber);
+						if (云裳数量String != null) {
+							definition.set云裳数量(Integer.parseInt(云裳数量String));
+						}
+					}
+				}
+			}
+		} catch (InvalidFormatException | IOException e) {
+			throw new ConfigurationRuntimeException(e);
+		}
+
+		return definitions;
 	}
 
 	private static Map<String, Integer> buildTitleIndex(Sheet sheet, int startColumnNumber) {
