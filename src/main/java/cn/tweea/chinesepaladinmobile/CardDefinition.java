@@ -7,6 +7,9 @@ package cn.tweea.chinesepaladinmobile;
 import java.util.EnumMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 public class CardDefinition {
 	private final String name;
 
@@ -40,5 +43,20 @@ public class CardDefinition {
 
 	public void set云裳数量(int 云裳数量) {
 		this.云裳数量 = 云裳数量;
+	}
+
+	@Override
+	public String toString() {
+		Map<CardDependencyType, String> dependencyNames = new EnumMap<>(CardDependencyType.class);
+		for (Map.Entry<CardDependencyType, CardDefinition> dependencyEntry : dependencies.entrySet()) {
+			dependencyNames.put(dependencyEntry.getKey(), dependencyEntry.getValue().name);
+		}
+		ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append("name", name);
+		if (grade == null) {
+			builder.append("grade", 0);
+		} else {
+			builder.append("grade", grade.getGrade());
+		}
+		return builder.append("dependencies", dependencyNames).append("云裳数量", 云裳数量).toString();
 	}
 }
