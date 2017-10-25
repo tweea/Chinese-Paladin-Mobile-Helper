@@ -4,6 +4,9 @@
  */
 package cn.tweea.chinesepaladinmobile;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 public class CardUpgradeNeed {
 	private final CardUpgradeNeedType type;
 
@@ -20,5 +23,10 @@ public class CardUpgradeNeed {
 
 	public int[] getNeeds() {
 		return needs;
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append("type", type).append("needs", needs).toString();
 	}
 }

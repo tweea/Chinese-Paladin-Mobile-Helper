@@ -7,6 +7,9 @@ package cn.tweea.chinesepaladinmobile;
 import java.util.EnumMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 public class CardGrade {
 	private final int grade;
 
@@ -23,5 +26,14 @@ public class CardGrade {
 
 	public Map<CardUpgradeNeedType, CardUpgradeNeed> getUpgradeNeeds() {
 		return upgradeNeeds;
+	}
+
+	public void addUpgradeNeed(CardUpgradeNeed upgradeNeed) {
+		upgradeNeeds.put(upgradeNeed.getType(), upgradeNeed);
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append("grade", grade).append("upgradeNeeds", upgradeNeeds).toString();
 	}
 }
