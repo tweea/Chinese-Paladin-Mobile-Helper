@@ -38,6 +38,11 @@ public final class Main {
 			// 初始化累计值
 			Map<String, Integer> needs = needsMap.get(name);
 			for (CardDefinition dependency : dependencies.values()) {
+				// 未出，跳过
+				if (dependency.getGrade() == null) {
+					continue;
+				}
+
 				needs.put(dependency.getName(), 0);
 			}
 
@@ -57,15 +62,23 @@ public final class Main {
 
 					int need = grade.computeNeed(upgradeNeedType, level);
 					if (dependencyType == null) {
+						accumulateNeed(needs, "总计", need);
 						accumulateNeed(needs, "自用", need);
 					} else {
 						CardDefinition dependency = dependencies.get(dependencyType);
 						if (dependency == null) {
 							continue;
 						}
+						// 未出，跳过
+						if (dependency.getGrade() == null) {
+							continue;
+						}
 
 						String dependencyName = dependency.getName();
 						accumulateNeed(needs, dependencyName, need);
+						Map<String, Integer> dependencyNeeds = needsMap.get(dependencyName);
+						accumulateNeed(dependencyNeeds, "总计", need);
+						accumulateNeed(dependencyNeeds, "他用", need);
 					}
 				}
 			}
