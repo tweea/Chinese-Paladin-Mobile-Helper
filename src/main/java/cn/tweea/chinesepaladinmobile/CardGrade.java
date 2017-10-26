@@ -32,6 +32,15 @@ public class CardGrade {
 		upgradeNeeds.put(upgradeNeed.getType(), upgradeNeed);
 	}
 
+	public int computeNeed(CardUpgradeNeedType upgradeNeedType, int currentLevel) {
+		CardUpgradeNeed upgradeNeed = upgradeNeeds.get(upgradeNeedType);
+		if (upgradeNeed == null) {
+			return 0;
+		}
+
+		return upgradeNeed.computeNeed(currentLevel);
+	}
+
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append("grade", grade).append("upgradeNeeds", upgradeNeeds).toString();
