@@ -136,6 +136,60 @@ public class DataFiles {
 		return definitions;
 	}
 
+	public static Map<String, Card> loadCard(Resource source, Map<String, CardDefinition> definitions) {
+		Map<String, Card> cards = new LinkedHashMap<>();
+
+		try (Workbook workbook = WorkbookFactory.create(source.getInputStream())) {
+			for (Sheet sheet : workbook) {
+				Map<String, Integer> levelTypeNameIndex = buildTitleIndex(sheet, 3);
+				Map<CardLevelType, Integer> levelTypeIndex = new EnumMap<>(CardLevelType.class);
+				for (Map.Entry<String, Integer> levelTypeNameEntry : levelTypeNameIndex.entrySet()) {
+					String levelTypeName = levelTypeNameEntry.getKey();
+					Integer levelTypeColumnNumber = levelTypeNameEntry.getValue();
+
+					CardLevelType levelType = CardLevelType.valueOf(levelTypeName);
+					if (levelType == null) {
+						throw new ConfigurationRuntimeException("CardLevelType");
+					}
+
+					levelTypeIndex.put(levelType, levelTypeColumnNumber);
+				}
+
+				int maxRowNumber = getRowNumber(sheet, 1, 0, "合计") - 1;
+				for (int rowNumber = 1; rowNumber <= maxRowNumber; rowNumber++) {
+					Row row = sheet.getRow(rowNumber);
+					String name = getCellStringValue(row, 0);
+					if (name == null) {
+						throw new ConfigurationRuntimeException("CardName");
+					}
+
+					CardDefinition definition = definitions.get(name);
+					if (definition == null) {
+						throw new ConfigurationRuntimeException("CardName");
+					}
+
+					Card card = new Card(definition);
+					for (Map.Entry<CardLevelType, Integer> levelTypeEntry : levelTypeIndex.entrySet()) {
+						CardLevelType levelType = levelTypeEntry.getKey();
+						Integer levelTypeColumnNumber = levelTypeEntry.getValue();
+
+						String levelString = getCellStringValue(row, levelTypeColumnNumber);
+						if (StringUtils.isBlank(levelString)) {
+							levelString = "0";
+						}
+
+						card.getLevels().put(levelType, Integer.valueOf(levelString));
+					}
+					cards.put(name, card);
+				}
+			}
+		} catch (InvalidFormatException | IOException e) {
+			throw new ConfigurationRuntimeException(e);
+		}
+
+		return cards;
+	}
+
 	private static Map<String, Integer> buildTitleIndex(Sheet sheet, int startColumnNumber) {
 		Map<String, Integer> titleIndex = new LinkedHashMap<>();
 
