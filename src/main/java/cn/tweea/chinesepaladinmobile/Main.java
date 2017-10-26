@@ -15,15 +15,20 @@ import org.springframework.core.io.ClassPathResource;
 
 public final class Main {
 	public static void main(String[] args) {
+		Map<CardLevelType, List<Pair<CardDependencyType, CardUpgradeNeedType>>> levelNeedMap = buildLevelNeedMap();
 		Map<Integer, CardGrade> grades = DataFiles.loadCardGrade(new ClassPathResource("CardPiece.xlsx"));
 		Map<String, CardDefinition> definitions = DataFiles.loadCardDefinition(new ClassPathResource("CardList.xlsx"), grades);
 		Map<String, Card> cards = DataFiles.loadCard(new ClassPathResource("CardStatus.xlsx"), definitions);
-		Map<CardLevelType, List<Pair<CardDependencyType, CardUpgradeNeedType>>> levelNeedMap = buildLevelNeedMap();
 
 		Map<String, Map<String, Integer>> needsMap = new LinkedHashMap<>();
-		for (Card card : cards.values()) {
+		for (String name : cards.keySet()) {
 			Map<String, Integer> needs = new LinkedHashMap<>();
-
+			needs.put("总计", 0);
+			needs.put("自用", 0);
+			needs.put("他用", 0);
+			needsMap.put(name, needs);
+		}
+		for (Card card : cards.values()) {
 			CardDefinition definition = card.getDefinition();
 			String name = definition.getName();
 			CardGrade grade = definition.getGrade();
@@ -31,7 +36,7 @@ public final class Main {
 			int 云裳数量 = definition.get云裳数量();
 
 			// 初始化累计值
-			needs.put(name, 0);
+			Map<String, Integer> needs = needsMap.get(name);
 			for (CardDefinition dependency : dependencies.values()) {
 				needs.put(dependency.getName(), 0);
 			}
@@ -50,26 +55,26 @@ public final class Main {
 					CardDependencyType dependencyType = levelNeed.getLeft();
 					CardUpgradeNeedType upgradeNeedType = levelNeed.getRight();
 
-					String dependencyName;
+					int need = grade.computeNeed(upgradeNeedType, level);
 					if (dependencyType == null) {
-						dependencyName = name;
+						accumulateNeed(needs, "自用", need);
 					} else {
 						CardDefinition dependency = dependencies.get(dependencyType);
 						if (dependency == null) {
 							continue;
 						}
 
-						dependencyName = dependency.getName();
+						String dependencyName = dependency.getName();
+						accumulateNeed(needs, dependencyName, need);
 					}
-
-					int need = grade.computeNeed(upgradeNeedType, level);
-					needs.put(dependencyName, needs.get(dependencyName) + need);
 				}
 			}
-
-			needsMap.put(name, needs);
 		}
-		System.out.println(needsMap);
+		for (Map.Entry<String, Map<String, Integer>> needsEntry : needsMap.entrySet()) {
+			String name = needsEntry.getKey();
+			Map<String, Integer> needs = needsEntry.getValue();
+			System.out.println(name + ':' + needs);
+		}
 	}
 
 	private static Map<CardLevelType, List<Pair<CardDependencyType, CardUpgradeNeedType>>> buildLevelNeedMap() {
@@ -112,5 +117,9 @@ public final class Main {
 		}
 
 		levelNeedList.add(Pair.of(dependencyType, upgradeNeedType));
+	}
+
+	private static void accumulateNeed(Map<String, Integer> needs, String name, int need) {
+		needs.put(name, needs.get(name) + need);
 	}
 }
