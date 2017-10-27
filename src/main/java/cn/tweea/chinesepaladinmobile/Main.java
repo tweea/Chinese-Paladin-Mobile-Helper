@@ -12,20 +12,23 @@ import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.WritableResource;
 
 public final class Main {
 	public static void main(String[] args) {
-		Map<CardLevelType, List<Pair<CardDependencyType, CardUpgradeNeedType>>> levelNeedMap = buildLevelNeedMap();
-		Map<Integer, CardGrade> grades = DataFiles.loadCardGrade(new ClassPathResource("CardPiece.xlsx"));
-		Map<String, CardDefinition> definitions = DataFiles.loadCardDefinition(new ClassPathResource("CardList.xlsx"), grades);
-		Map<String, Card> cards = DataFiles.loadCard(new ClassPathResource("CardStatus.xlsx"), definitions);
+		Resource gradeResource = new ClassPathResource("CardPiece.xlsx");
+		Resource definitionResource = new ClassPathResource("CardList.xlsx");
+		Resource cardInputResource = new ClassPathResource("CardStatus.xlsx");
+		WritableResource cardOutputResource = new FileSystemResource("E:/Work/文艺娱乐/游戏/仙剑奇侠传手游/人物列表.xlsx");
 
+		Map<CardLevelType, List<Pair<CardDependencyType, CardUpgradeNeedType>>> levelNeedMap = buildLevelNeedMap();
+		Map<Integer, CardGrade> grades = DataFiles.loadCardGrade(gradeResource);
+		Map<String, CardDefinition> definitions = DataFiles.loadCardDefinition(definitionResource, grades);
+		Map<String, Card> cards = DataFiles.loadCard(cardInputResource, definitions);
 		Map<String, Map<String, Integer>> needsMap = computeNeed(cards, levelNeedMap);
-		for (Map.Entry<String, Map<String, Integer>> needsEntry : needsMap.entrySet()) {
-			String name = needsEntry.getKey();
-			Map<String, Integer> needs = needsEntry.getValue();
-			System.out.println(name + ':' + needs);
-		}
+		DataFiles.writeNeedsMap(cardInputResource, needsMap, cardOutputResource);
 	}
 
 	private static Map<CardLevelType, List<Pair<CardDependencyType, CardUpgradeNeedType>>> buildLevelNeedMap() {
