@@ -20,6 +20,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.WritableResource;
 
 public class DataFiles {
 	public static Map<Integer, CardGrade> loadCardGrade(Resource source) {
@@ -188,6 +189,45 @@ public class DataFiles {
 		}
 
 		return cards;
+	}
+
+	public static void writeNeedsMap(Resource source, Map<String, Map<String, Integer>> needsMap, WritableResource target) {
+		try (Workbook workbook = WorkbookFactory.create(source.getInputStream())) {
+			for (Sheet sheet : workbook) {
+				Map<String, Integer> levelTypeNameIndex = buildTitleIndex(sheet, 3);
+				int maxLevelTypeColumnNumber = 2;
+				for (Integer levelTypeColumnNumber : levelTypeNameIndex.values()) {
+					if (levelTypeColumnNumber > maxLevelTypeColumnNumber) {
+						maxLevelTypeColumnNumber = levelTypeColumnNumber;
+					}
+				}
+
+				int maxRowNumber = getRowNumber(sheet, 1, 0, "合计") - 1;
+				for (int rowNumber = 1; rowNumber <= maxRowNumber; rowNumber++) {
+					Row row = sheet.getRow(rowNumber);
+					String name = getCellStringValue(row, 0);
+					if (name == null) {
+						throw new ConfigurationRuntimeException("CardName");
+					}
+
+					Map<String, Integer> needs = needsMap.get(name);
+					if (needs == null) {
+						throw new ConfigurationRuntimeException("CardName");
+					}
+
+					int needColumnNumber = maxLevelTypeColumnNumber + 2;
+					for (Map.Entry<String, Integer> needEntry : needs.entrySet()) {
+						String needName = needEntry.getKey();
+						Integer need = needEntry.getValue();
+						row.createCell(needColumnNumber).setCellValue(needName + ':' + need);
+						needColumnNumber++;
+					}
+				}
+			}
+			workbook.write(target.getOutputStream());
+		} catch (InvalidFormatException | IOException e) {
+			throw new ConfigurationRuntimeException(e);
+		}
 	}
 
 	private static Map<String, Integer> buildTitleIndex(Sheet sheet, int startColumnNumber) {
