@@ -201,10 +201,13 @@ public class DataFiles {
 						maxLevelTypeColumnNumber = levelTypeColumnNumber;
 					}
 				}
+				int minNeedColumnNumber = maxLevelTypeColumnNumber + 2;
+				int maxNeedColumnNumber = minNeedColumnNumber + 20;
+
 				Row titleRow = sheet.getRow(0);
-				titleRow.createCell(maxLevelTypeColumnNumber + 2).setCellValue("总计");
-				titleRow.createCell(maxLevelTypeColumnNumber + 3).setCellValue("自用");
-				titleRow.createCell(maxLevelTypeColumnNumber + 4).setCellValue("他用");
+				titleRow.createCell(minNeedColumnNumber).setCellValue("总计");
+				titleRow.createCell(minNeedColumnNumber + 1).setCellValue("自用");
+				titleRow.createCell(minNeedColumnNumber + 2).setCellValue("他用");
 
 				int maxRowNumber = getRowNumber(sheet, 1, 0, "合计") - 1;
 				for (int rowNumber = 1; rowNumber <= maxRowNumber; rowNumber++) {
@@ -219,16 +222,30 @@ public class DataFiles {
 						throw new ConfigurationRuntimeException("CardName");
 					}
 
-					int needColumnNumber = maxLevelTypeColumnNumber + 2;
+					int needColumnNumber = minNeedColumnNumber;
 					for (Map.Entry<String, Integer> needEntry : needs.entrySet()) {
 						String needName = needEntry.getKey();
 						Integer need = needEntry.getValue();
-						if (!"总计".equals(needName) && !"自用".equals(needName) && !"他用".equals(needName)) {
+						if ("总计".equals(needName) || "自用".equals(needName) || "他用".equals(needName)) {
+							row.createCell(needColumnNumber).setCellValue(need);
+							needColumnNumber++;
+						} else {
+							if (need == 0) {
+								continue;
+							}
 							row.createCell(needColumnNumber).setCellValue(needName);
 							needColumnNumber++;
+							row.createCell(needColumnNumber).setCellValue(need);
+							needColumnNumber++;
 						}
-						row.createCell(needColumnNumber).setCellValue(need);
-						needColumnNumber++;
+					}
+					for (; needColumnNumber <= maxNeedColumnNumber; needColumnNumber++) {
+						Cell cell = row.getCell(needColumnNumber);
+						if (cell == null) {
+							break;
+						}
+
+						row.removeCell(cell);
 					}
 				}
 			}
