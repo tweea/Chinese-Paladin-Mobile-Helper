@@ -18,10 +18,20 @@ import org.springframework.core.io.WritableResource;
 
 public final class Main {
 	public static void main(String[] args) {
+		String cardInputResourcePath;
+		if (args.length >= 1) {
+			cardInputResourcePath = args[0];
+		} else {
+			cardInputResourcePath = "人物列表.xlsx";
+		}
+
 		Resource gradeResource = new ClassPathResource("CardPiece.xlsx");
 		Resource definitionResource = new ClassPathResource("CardList.xlsx");
-		Resource cardInputResource = new ClassPathResource("CardStatus.xlsx");
-		WritableResource cardOutputResource = new FileSystemResource("E:/Work/文艺娱乐/游戏/仙剑奇侠传手游/人物列表.xlsx");
+		Resource cardInputResource = new FileSystemResource(cardInputResourcePath);
+		if (!cardInputResource.exists()) {
+			cardInputResource = new ClassPathResource("CardStatus.xlsx");
+		}
+		WritableResource cardOutputResource = new FileSystemResource(cardInputResourcePath);
 
 		Map<CardLevelType, List<Pair<CardDependencyType, CardUpgradeNeedType>>> levelNeedMap = buildLevelNeedMap();
 		Map<Integer, CardGrade> grades = DataFiles.loadCardGrade(gradeResource);
