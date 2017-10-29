@@ -227,7 +227,11 @@ public class DataFiles {
 						String needName = needEntry.getKey();
 						Integer need = needEntry.getValue();
 						if ("总计".equals(needName) || "自用".equals(needName) || "他用".equals(needName)) {
-							row.createCell(needColumnNumber).setCellValue(need);
+							if (need == 0) {
+								row.createCell(needColumnNumber);
+							} else {
+								row.createCell(needColumnNumber).setCellValue(need);
+							}
 							needColumnNumber++;
 						} else {
 							if (need == 0) {
