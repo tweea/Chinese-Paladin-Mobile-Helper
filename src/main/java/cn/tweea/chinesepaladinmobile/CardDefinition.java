@@ -19,6 +19,8 @@ public class CardDefinition {
 
 	private int 云裳数量;
 
+	private int 云裳部件数量;
+
 	public CardDefinition(String name, CardGrade grade) {
 		this.name = name;
 		this.grade = grade;
@@ -45,6 +47,14 @@ public class CardDefinition {
 		this.云裳数量 = 云裳数量;
 	}
 
+	public int get云裳部件数量() {
+		return 云裳部件数量;
+	}
+
+	public void set云裳部件数量(int 云裳部件数量) {
+		this.云裳部件数量 = 云裳部件数量;
+	}
+
 	@Override
 	public String toString() {
 		Map<CardDependencyType, String> dependencyNames = new EnumMap<>(CardDependencyType.class);
@@ -57,6 +67,6 @@ public class CardDefinition {
 		} else {
 			builder.append("grade", grade.getGrade());
 		}
-		return builder.append("dependencies", dependencyNames).append("云裳数量", 云裳数量).toString();
+		return builder.append("dependencies", dependencyNames).append("云裳数量", 云裳数量).append("云裳部件数量", 云裳部件数量).toString();
 	}
 }

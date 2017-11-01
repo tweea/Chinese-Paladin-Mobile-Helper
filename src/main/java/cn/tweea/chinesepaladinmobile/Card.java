@@ -5,6 +5,7 @@
 package cn.tweea.chinesepaladinmobile;
 
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -13,7 +14,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class Card {
 	private final CardDefinition definition;
 
-	private final Map<CardLevelType, Integer> levels;
+	private final Map<CardLevelType, List<Integer>> levels;
 
 	public Card(CardDefinition definition) {
 		this.definition = definition;
@@ -24,7 +25,7 @@ public class Card {
 		return definition;
 	}
 
-	public Map<CardLevelType, Integer> getLevels() {
+	public Map<CardLevelType, List<Integer>> getLevels() {
 		return levels;
 	}
 

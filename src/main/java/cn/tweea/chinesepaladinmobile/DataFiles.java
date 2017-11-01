@@ -5,9 +5,11 @@
 package cn.tweea.chinesepaladinmobile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.configuration.ConfigurationRuntimeException;
@@ -86,6 +88,7 @@ public class DataFiles {
 			for (Sheet sheet : workbook) {
 				Map<String, Integer> dependencyTypeNameIndex = buildTitleIndex(sheet, 3);
 				Integer 云裳ColumnNumber = dependencyTypeNameIndex.remove("云裳");
+				Integer 云裳部件ColumnNumber = dependencyTypeNameIndex.remove("云裳部件");
 				Map<CardDependencyType, Integer> dependencyTypeIndex = new EnumMap<>(CardDependencyType.class);
 				for (Map.Entry<String, Integer> dependencyTypeNameEntry : dependencyTypeNameIndex.entrySet()) {
 					String dependencyTypeName = dependencyTypeNameEntry.getKey();
@@ -126,6 +129,12 @@ public class DataFiles {
 						String 云裳数量String = getCellStringValue(row, 云裳ColumnNumber);
 						if (云裳数量String != null) {
 							definition.set云裳数量(Integer.parseInt(云裳数量String));
+						}
+					}
+					if (云裳部件ColumnNumber != null) {
+						String 云裳部件数量String = getCellStringValue(row, 云裳部件ColumnNumber);
+						if (云裳部件数量String != null) {
+							definition.set云裳部件数量(Integer.parseInt(云裳部件数量String));
 						}
 					}
 				}
@@ -179,7 +188,12 @@ public class DataFiles {
 							levelString = "0";
 						}
 
-						card.getLevels().put(levelType, Integer.valueOf(levelString));
+						String[] levelStringParts = StringUtils.split(levelString, ',');
+						List<Integer> levels = new ArrayList<>();
+						for (String levelStringPart : levelStringParts) {
+							levels.add(Integer.valueOf(levelStringPart));
+						}
+						card.getLevels().put(levelType, levels);
 					}
 					cards.put(name, card);
 				}

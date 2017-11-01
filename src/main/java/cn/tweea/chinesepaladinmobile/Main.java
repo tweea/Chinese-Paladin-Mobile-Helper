@@ -67,8 +67,8 @@ public final class Main {
 		buildLevelNeedMap(levelNeedMap, CardLevelType.绝技6, CardDependencyType.绝技1, CardUpgradeNeedType.绝技六副);
 		buildLevelNeedMap(levelNeedMap, CardLevelType.绝技6, CardDependencyType.绝技2, CardUpgradeNeedType.绝技六副);
 		buildLevelNeedMap(levelNeedMap, CardLevelType.绝技6, CardDependencyType.绝技3, CardUpgradeNeedType.绝技六副);
-		buildLevelNeedMap(levelNeedMap, CardLevelType.云裳1, null, CardUpgradeNeedType.云裳);
-		buildLevelNeedMap(levelNeedMap, CardLevelType.云裳2, null, CardUpgradeNeedType.云裳);
+		buildLevelNeedMap(levelNeedMap, CardLevelType.云裳, null, CardUpgradeNeedType.云裳);
+		buildLevelNeedMap(levelNeedMap, CardLevelType.云裳部件, null, CardUpgradeNeedType.云裳部件);
 		return levelNeedMap;
 	}
 
@@ -100,6 +100,7 @@ public final class Main {
 			CardGrade grade = definition.getGrade();
 			Map<CardDependencyType, CardDefinition> dependencies = definition.getDependencies();
 			int 云裳数量 = definition.get云裳数量();
+			int 云裳部件数量 = definition.get云裳部件数量();
 
 			// 初始化累计值
 			Map<String, Integer> needs = needsMap.get(name);
@@ -112,21 +113,32 @@ public final class Main {
 				needs.put(dependency.getName(), 0);
 			}
 
-			for (Map.Entry<CardLevelType, Integer> levelEntry : card.getLevels().entrySet()) {
+			for (Map.Entry<CardLevelType, List<Integer>> levelEntry : card.getLevels().entrySet()) {
 				CardLevelType levelType = levelEntry.getKey();
-				Integer level = levelEntry.getValue();
+				List<Integer> levels = levelEntry.getValue();
 
-				if (云裳数量 == 0 && (levelType == CardLevelType.云裳1 || levelType == CardLevelType.云裳2)) {
-					continue;
-				} else if (云裳数量 == 1 && levelType == CardLevelType.云裳2) {
-					continue;
+				int maxLevelNumber;
+				if (levelType == CardLevelType.云裳) {
+					maxLevelNumber = 云裳数量;
+				} else if (levelType == CardLevelType.云裳部件) {
+					maxLevelNumber = 云裳部件数量;
+				} else {
+					maxLevelNumber = 1;
 				}
 
 				for (Pair<CardDependencyType, CardUpgradeNeedType> levelNeed : levelNeedMap.get(levelType)) {
 					CardDependencyType dependencyType = levelNeed.getLeft();
 					CardUpgradeNeedType upgradeNeedType = levelNeed.getRight();
 
-					int need = grade.computeNeed(upgradeNeedType, level);
+					int need = 0;
+					int levelNumber = maxLevelNumber;
+					for (Integer level : levels) {
+						if (levelNumber == 0) {
+							break;
+						}
+						need += grade.computeNeed(upgradeNeedType, level);
+						levelNumber--;
+					}
 					if (dependencyType == null) {
 						accumulateNeed(needs, "总计", need);
 						accumulateNeed(needs, "自用", need);
