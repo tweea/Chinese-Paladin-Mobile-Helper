@@ -135,13 +135,14 @@ public final class Main {
 					CardUpgradeNeedType upgradeNeedType = levelNeed.getRight();
 
 					int need = 0;
-					int levelNumber = maxLevelNumber;
-					for (Integer level : levels) {
-						if (levelNumber == 0) {
-							break;
+					for (int levelIndex = 0; levelIndex < maxLevelNumber; levelIndex++) {
+						Integer level;
+						if (levelIndex >= levels.size()) {
+							level = 0;
+						} else {
+							level = levels.get(levelIndex);
 						}
 						need += grade.computeNeed(upgradeNeedType, level);
-						levelNumber--;
 					}
 					if (dependencyType == null) {
 						accumulateNeed(needs, "总计", need);
