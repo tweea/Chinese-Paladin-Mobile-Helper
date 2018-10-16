@@ -216,7 +216,7 @@ public class DataFiles {
 					}
 				}
 				int minNeedColumnNumber = maxLevelTypeColumnNumber + 2;
-				int maxNeedColumnNumber = minNeedColumnNumber + 20;
+				int maxNeedColumnNumber = minNeedColumnNumber + 25;
 
 				Row titleRow = sheet.getRow(0);
 				titleRow.createCell(minNeedColumnNumber).setCellValue("总计");

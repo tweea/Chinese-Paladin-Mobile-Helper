@@ -69,6 +69,8 @@ public final class Main {
 		buildLevelNeedMap(levelNeedMap, CardLevelType.绝技6, CardDependencyType.绝技33, CardUpgradeNeedType.绝技六副);
 		buildLevelNeedMap(levelNeedMap, CardLevelType.云裳, null, CardUpgradeNeedType.云裳);
 		buildLevelNeedMap(levelNeedMap, CardLevelType.云裳部件, null, CardUpgradeNeedType.云裳部件);
+		buildLevelNeedMap(levelNeedMap, CardLevelType.云裳点化, null, CardUpgradeNeedType.云裳点化);
+		buildLevelNeedMap(levelNeedMap, CardLevelType.云裳点化副, null, CardUpgradeNeedType.云裳点化);
 		return levelNeedMap;
 	}
 
@@ -122,6 +124,8 @@ public final class Main {
 					maxLevelNumber = 云裳数量;
 				} else if (levelType == CardLevelType.云裳部件) {
 					maxLevelNumber = 云裳部件数量;
+				} else if (levelType == CardLevelType.云裳点化 || levelType == CardLevelType.云裳点化副) {
+					maxLevelNumber = 云裳数量 * 2;
 				} else {
 					maxLevelNumber = 1;
 				}
