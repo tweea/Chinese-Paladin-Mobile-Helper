@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.configuration.ConfigurationRuntimeException;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -205,6 +206,10 @@ public class DataFiles {
 		return cards;
 	}
 
+	public static final String[] STATIC_RESULT_COLUMNS = {
+		"总计", "自用", "他用"
+	};
+
 	public static void writeNeedsMap(Resource source, Map<String, Map<String, Integer>> needsMap, WritableResource target) {
 		try (Workbook workbook = WorkbookFactory.create(source.getInputStream())) {
 			for (Sheet sheet : workbook) {
@@ -219,9 +224,11 @@ public class DataFiles {
 				int maxNeedColumnNumber = minNeedColumnNumber + 25;
 
 				Row titleRow = sheet.getRow(0);
-				titleRow.createCell(minNeedColumnNumber).setCellValue("总计");
-				titleRow.createCell(minNeedColumnNumber + 1).setCellValue("自用");
-				titleRow.createCell(minNeedColumnNumber + 2).setCellValue("他用");
+				int staticNeedColumnNumber = minNeedColumnNumber;
+				for (String column : STATIC_RESULT_COLUMNS) {
+					titleRow.createCell(staticNeedColumnNumber).setCellValue(column);
+					staticNeedColumnNumber++;
+				}
 
 				int maxRowNumber = getRowNumber(sheet, 1, 0, "合计") - 1;
 				for (int rowNumber = 1; rowNumber <= maxRowNumber; rowNumber++) {
@@ -240,7 +247,7 @@ public class DataFiles {
 					for (Map.Entry<String, Integer> needEntry : needs.entrySet()) {
 						String needName = needEntry.getKey();
 						Integer need = needEntry.getValue();
-						if ("总计".equals(needName) || "自用".equals(needName) || "他用".equals(needName)) {
+						if (ArrayUtils.contains(STATIC_RESULT_COLUMNS, needName)) {
 							if (need == 0) {
 								row.createCell(needColumnNumber);
 							} else {

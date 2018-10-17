@@ -91,9 +91,9 @@ public final class Main {
 
 		for (String name : cards.keySet()) {
 			Map<String, Integer> needs = new LinkedHashMap<>();
-			needs.put("总计", 0);
-			needs.put("自用", 0);
-			needs.put("他用", 0);
+			for (String column : DataFiles.STATIC_RESULT_COLUMNS) {
+				needs.put(column, 0);
+			}
 			needsMap.put(name, needs);
 		}
 		for (Card card : cards.values()) {
