@@ -207,7 +207,7 @@ public class DataFiles {
 	}
 
 	public static final String[] STATIC_RESULT_COLUMNS = {
-		"总计", "自用", "他用"
+		"总计", "自用", "他用", "公用", "现有", "差额", "差额排名"
 	};
 
 	public static void writeNeedsMap(Resource source, Map<String, Map<String, Integer>> needsMap, WritableResource target) {

@@ -147,6 +147,13 @@ public final class Main {
 					if (dependencyType == null) {
 						accumulateNeed(needs, "总计", need);
 						accumulateNeed(needs, "自用", need);
+						if (levelType == CardLevelType.云裳 || levelType == CardLevelType.云裳部件) {
+							accumulateNeed(needs, "公用", need);
+						}
+						// 预留云裳数量
+						if (levelType == CardLevelType.云裳 && 云裳数量 == 0) {
+							accumulateNeed(needs, "公用", grade.computeNeed(upgradeNeedType, 0));
+						}
 					} else {
 						CardDefinition dependency = dependencies.get(dependencyType);
 						if (dependency == null) {
