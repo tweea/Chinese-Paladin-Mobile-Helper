@@ -263,6 +263,20 @@ public class DataFiles {
 							formula.append(", 0)");
 							row.createCell(needColumnNumber).setCellFormula(formula.toString());
 							needColumnNumber++;
+						} else if ("差额排名".equals(needName)) {
+							StringBuilder formula = new StringBuilder();
+							formula.append("RANK(");
+							formula.append(staticNeedColumnReferenceIndex.get("差额"));
+							formula.append(rowNumber + 1);
+							formula.append(", $");
+							formula.append(staticNeedColumnReferenceIndex.get("差额"));
+							formula.append("$2:$");
+							formula.append(staticNeedColumnReferenceIndex.get("差额"));
+							formula.append("$");
+							formula.append(maxRowNumber + 1);
+							formula.append(")");
+							row.createCell(needColumnNumber).setCellFormula(formula.toString());
+							needColumnNumber++;
 						} else if (ArrayUtils.contains(STATIC_RESULT_COLUMNS, needName)) {
 							if (need == 0) {
 								row.createCell(needColumnNumber);
