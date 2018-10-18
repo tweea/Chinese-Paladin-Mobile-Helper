@@ -304,6 +304,7 @@ public class DataFiles {
 					}
 				}
 			}
+			workbook.getCreationHelper().createFormulaEvaluator().evaluateAll();
 			workbook.write(target.getOutputStream());
 		} catch (InvalidFormatException | IOException e) {
 			throw new ConfigurationRuntimeException(e);
