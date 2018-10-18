@@ -22,6 +22,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.util.CellReference;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.WritableResource;
 
@@ -223,9 +224,11 @@ public class DataFiles {
 				int minNeedColumnNumber = maxLevelTypeColumnNumber + 2;
 				int maxNeedColumnNumber = minNeedColumnNumber + 25;
 
+				Map<String, String> staticNeedColumnReferenceIndex = new LinkedHashMap<>();
 				Row titleRow = sheet.getRow(0);
 				int staticNeedColumnNumber = minNeedColumnNumber;
 				for (String column : STATIC_RESULT_COLUMNS) {
+					staticNeedColumnReferenceIndex.put(column, CellReference.convertNumToColString(staticNeedColumnNumber));
 					titleRow.createCell(staticNeedColumnNumber).setCellValue(column);
 					staticNeedColumnNumber++;
 				}
@@ -247,7 +250,20 @@ public class DataFiles {
 					for (Map.Entry<String, Integer> needEntry : needs.entrySet()) {
 						String needName = needEntry.getKey();
 						Integer need = needEntry.getValue();
-						if (ArrayUtils.contains(STATIC_RESULT_COLUMNS, needName)) {
+						if ("现有".equals(needName)) {
+							needColumnNumber++;
+						} else if ("差额".equals(needName)) {
+							StringBuilder formula = new StringBuilder();
+							formula.append("MAX(");
+							formula.append(staticNeedColumnReferenceIndex.get("总计"));
+							formula.append(rowNumber + 1);
+							formula.append(" - ");
+							formula.append(staticNeedColumnReferenceIndex.get("现有"));
+							formula.append(rowNumber + 1);
+							formula.append(", 0)");
+							row.createCell(needColumnNumber).setCellFormula(formula.toString());
+							needColumnNumber++;
+						} else if (ArrayUtils.contains(STATIC_RESULT_COLUMNS, needName)) {
 							if (need == 0) {
 								row.createCell(needColumnNumber);
 							} else {
