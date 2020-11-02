@@ -12,12 +12,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.configuration.ConfigurationRuntimeException;
+import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -25,6 +23,8 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.CellReference;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.WritableResource;
+
+import net.matrix.lang.Reflections;
 
 public class DataFiles {
     public static Map<Integer, CardGrade> loadCardGrade(Resource source) {
@@ -62,7 +62,7 @@ public class DataFiles {
 
                 grades.put(grade.getGrade(), grade);
             }
-        } catch (InvalidFormatException | IOException e) {
+        } catch (IOException e) {
             throw new ConfigurationRuntimeException(e);
         }
 
@@ -141,7 +141,7 @@ public class DataFiles {
                     }
                 }
             }
-        } catch (InvalidFormatException | IOException e) {
+        } catch (IOException e) {
             throw new ConfigurationRuntimeException(e);
         }
 
@@ -200,7 +200,7 @@ public class DataFiles {
                     cards.put(name, card);
                 }
             }
-        } catch (InvalidFormatException | IOException e) {
+        } catch (IOException e) {
             throw new ConfigurationRuntimeException(e);
         }
 
@@ -306,7 +306,7 @@ public class DataFiles {
             }
             workbook.getCreationHelper().createFormulaEvaluator().evaluateAll();
             workbook.write(target.getOutputStream());
-        } catch (InvalidFormatException | IOException e) {
+        } catch (IOException e) {
             throw new ConfigurationRuntimeException(e);
         }
     }
@@ -346,12 +346,7 @@ public class DataFiles {
             return null;
         }
 
-        CellType cellType = cell.getCellTypeEnum();
-        if (cellType == CellType.NUMERIC) {
-            cell.setCellType(CellType.STRING);
-        }
-
-        String cellValue = cell.getStringCellValue();
+        String cellValue = Reflections.invokeMethod(cell, "convertCellValueToString");
         if (cellValue == null) {
             return null;
         }
