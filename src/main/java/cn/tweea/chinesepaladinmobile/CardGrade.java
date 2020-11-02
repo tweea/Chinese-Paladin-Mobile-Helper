@@ -11,38 +11,38 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class CardGrade {
-	private final int grade;
+    private final int grade;
 
-	private final Map<CardUpgradeNeedType, CardUpgradeNeed> upgradeNeeds;
+    private final Map<CardUpgradeNeedType, CardUpgradeNeed> upgradeNeeds;
 
-	public CardGrade(int grade) {
-		this.grade = grade;
-		this.upgradeNeeds = new EnumMap<>(CardUpgradeNeedType.class);
-	}
+    public CardGrade(int grade) {
+        this.grade = grade;
+        this.upgradeNeeds = new EnumMap<>(CardUpgradeNeedType.class);
+    }
 
-	public int getGrade() {
-		return grade;
-	}
+    public int getGrade() {
+        return grade;
+    }
 
-	public Map<CardUpgradeNeedType, CardUpgradeNeed> getUpgradeNeeds() {
-		return upgradeNeeds;
-	}
+    public Map<CardUpgradeNeedType, CardUpgradeNeed> getUpgradeNeeds() {
+        return upgradeNeeds;
+    }
 
-	public void addUpgradeNeed(CardUpgradeNeed upgradeNeed) {
-		upgradeNeeds.put(upgradeNeed.getType(), upgradeNeed);
-	}
+    public void addUpgradeNeed(CardUpgradeNeed upgradeNeed) {
+        upgradeNeeds.put(upgradeNeed.getType(), upgradeNeed);
+    }
 
-	public int computeNeed(CardUpgradeNeedType upgradeNeedType, int currentLevel) {
-		CardUpgradeNeed upgradeNeed = upgradeNeeds.get(upgradeNeedType);
-		if (upgradeNeed == null) {
-			return 0;
-		}
+    public int computeNeed(CardUpgradeNeedType upgradeNeedType, int currentLevel) {
+        CardUpgradeNeed upgradeNeed = upgradeNeeds.get(upgradeNeedType);
+        if (upgradeNeed == null) {
+            return 0;
+        }
 
-		return upgradeNeed.computeNeed(currentLevel);
-	}
+        return upgradeNeed.computeNeed(currentLevel);
+    }
 
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append("grade", grade).append("upgradeNeeds", upgradeNeeds).toString();
-	}
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append("grade", grade).append("upgradeNeeds", upgradeNeeds).toString();
+    }
 }

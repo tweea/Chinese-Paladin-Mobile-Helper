@@ -1,103 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-	<!-- 基本属性 - 项目属性 -->
-	<groupId>cn.tweea</groupId>
-	<artifactId>Chinese-Paladin-Mobile-Helper</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
-	<packaging>jar</packaging>
+    <!-- 基本属性 - 项目属性 -->
+    <groupId>cn.tweea</groupId>
+    <artifactId>Chinese-Paladin-Mobile-Helper</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
-	<!-- 基本属性 - 属性 -->
+    <!-- 基本属性 - 属性 -->
 
-	<!-- 基本属性 - 项目关系 -->
-	<parent>
-		<groupId>net.sf.matrixjavalib</groupId>
-		<artifactId>genesis8</artifactId>
-		<version>37</version>
-	</parent>
-	<dependencies>
-		<!-- compile -->
-		<dependency>
-			<groupId>net.sf.matrixjavalib</groupId>
-			<artifactId>mxlib-common</artifactId>
-			<version>2.0.2</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-			<version>3.17</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId>
-			<version>3.17</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml-schemas</artifactId>
-			<version>3.17</version>
-			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<!-- 使用 Java 内置类代替 -->
-					<groupId>stax</groupId>
-					<artifactId>stax-api</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<!-- provided -->
-		<!-- runtime -->
-		<!-- test -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.assertj</groupId>
-			<artifactId>assertj-core</artifactId>
-			<version>2.2.0</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+    <!-- 基本属性 - 项目关系 -->
+    <parent>
+        <groupId>net.sf.matrixjavalib</groupId>
+        <artifactId>genesis8</artifactId>
+        <version>37</version>
+    </parent>
+    <dependencies>
+        <!-- compile -->
+        <dependency>
+            <groupId>net.sf.matrixjavalib</groupId>
+            <artifactId>mxlib-common</artifactId>
+            <version>2.0.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.17</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.17</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml-schemas</artifactId>
+            <version>3.17</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <!-- 使用 Java 内置类代替 -->
+                    <groupId>stax</groupId>
+                    <artifactId>stax-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- provided -->
+        <!-- runtime -->
+        <!-- test -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>2.2.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
-	<!-- 构建设置 -->
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>1.5.7.RELEASE</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+    <!-- 构建设置 -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>1.5.7.RELEASE</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
-	<!-- 项目信息 -->
-	<name>Tweea :: 仙剑手游工具</name>
-	<description>仙剑手游工具</description>
-	<inceptionYear>2017</inceptionYear>
+    <!-- 项目信息 -->
+    <name>Tweea :: 仙剑手游工具</name>
+    <description>仙剑手游工具</description>
+    <inceptionYear>2017</inceptionYear>
 
-	<!-- 构建环境 -->
-	<issueManagement>
-		<system>GitHub</system>
-		<url>https://github.com/tweea/Chinese-Paladin-Mobile-Helper/issues</url>
-	</issueManagement>
-	<scm>
-		<connection>scm:git:https://github.com/tweea/Chinese-Paladin-Mobile-Helper.git</connection>
-		<developerConnection>scm:git:https://github.com/tweea/Chinese-Paladin-Mobile-Helper.git</developerConnection>
-		<url>https://github.com/tweea/Chinese-Paladin-Mobile-Helper</url>
-		<tag>HEAD</tag>
-	</scm>
+    <!-- 构建环境 -->
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/tweea/Chinese-Paladin-Mobile-Helper/issues</url>
+    </issueManagement>
+    <scm>
+        <connection>scm:git:https://github.com/tweea/Chinese-Paladin-Mobile-Helper.git</connection>
+        <developerConnection>scm:git:https://github.com/tweea/Chinese-Paladin-Mobile-Helper.git</developerConnection>
+        <url>https://github.com/tweea/Chinese-Paladin-Mobile-Helper</url>
+        <tag>HEAD</tag>
+    </scm>
 </project>
