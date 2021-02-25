@@ -67,6 +67,7 @@ public final class Main {
         buildLevelNeedMap(levelNeedMap, CardLevelType.绝技6, CardDependencyType.绝技61, CardUpgradeNeedType.绝技六副);
         buildLevelNeedMap(levelNeedMap, CardLevelType.绝技6, CardDependencyType.绝技62, CardUpgradeNeedType.绝技六副);
         buildLevelNeedMap(levelNeedMap, CardLevelType.绝技6, CardDependencyType.绝技63, CardUpgradeNeedType.绝技六副);
+        buildLevelNeedMap(levelNeedMap, CardLevelType.绝技7, null, CardUpgradeNeedType.绝技七);
         buildLevelNeedMap(levelNeedMap, CardLevelType.云裳, null, CardUpgradeNeedType.云裳);
         buildLevelNeedMap(levelNeedMap, CardLevelType.云裳部件, null, CardUpgradeNeedType.云裳部件);
         buildLevelNeedMap(levelNeedMap, CardLevelType.云裳点化, null, CardUpgradeNeedType.云裳点化);
