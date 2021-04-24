@@ -115,7 +115,7 @@ public class DataFiles {
                         Integer dependencyTypeColumnNumber = dependencyTypeEntry.getValue();
 
                         String dependencyName = getCellStringValue(row, dependencyTypeColumnNumber);
-                        if (dependencyName == null) {
+                        if (StringUtils.isBlank(dependencyName)) {
                             continue;
                         }
 
