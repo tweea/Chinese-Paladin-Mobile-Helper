@@ -46,7 +46,8 @@ public final class Main {
         buildLevelNeedMap(levelNeedMap, CardLevelType.聚魂, null, CardUpgradeNeedType.聚魂);
         buildLevelNeedMap(levelNeedMap, CardLevelType.修炼, null, CardUpgradeNeedType.修炼);
         buildLevelNeedMap(levelNeedMap, CardLevelType.飞升, null, CardUpgradeNeedType.飞升);
-        buildLevelNeedMap(levelNeedMap, CardLevelType.仙缘1, CardDependencyType.仙缘1, CardUpgradeNeedType.仙缘);
+        buildLevelNeedMap(levelNeedMap, CardLevelType.仙缘11, CardDependencyType.仙缘11, CardUpgradeNeedType.仙缘);
+        buildLevelNeedMap(levelNeedMap, CardLevelType.仙缘12, CardDependencyType.仙缘12, CardUpgradeNeedType.仙缘);
         buildLevelNeedMap(levelNeedMap, CardLevelType.仙缘21, CardDependencyType.仙缘21, CardUpgradeNeedType.仙缘);
         buildLevelNeedMap(levelNeedMap, CardLevelType.仙缘22, CardDependencyType.仙缘22, CardUpgradeNeedType.仙缘);
         buildLevelNeedMap(levelNeedMap, CardLevelType.仙缘31, CardDependencyType.仙缘31, CardUpgradeNeedType.仙缘);
