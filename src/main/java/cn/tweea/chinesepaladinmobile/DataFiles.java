@@ -80,7 +80,7 @@ public class DataFiles {
                 for (int rowNumber = 1; rowNumber <= maxRowNumber; rowNumber++) {
                     Row row = sheet.getRow(rowNumber);
                     String name = getCellStringValue(row, 0);
-                    if (name == null) {
+                    if (StringUtils.isBlank(name)) {
                         throw new ConfigurationRuntimeException("CardDefinitionName");
                     }
 
@@ -129,13 +129,13 @@ public class DataFiles {
 
                     if (云裳ColumnNumber != null) {
                         String 云裳数量String = getCellStringValue(row, 云裳ColumnNumber);
-                        if (云裳数量String != null) {
+                        if (StringUtils.isNotBlank(云裳数量String)) {
                             definition.set云裳数量(Integer.parseInt(云裳数量String));
                         }
                     }
                     if (云裳部件ColumnNumber != null) {
                         String 云裳部件数量String = getCellStringValue(row, 云裳部件ColumnNumber);
-                        if (云裳部件数量String != null) {
+                        if (StringUtils.isNotBlank(云裳部件数量String)) {
                             definition.set云裳部件数量(Integer.parseInt(云裳部件数量String));
                         }
                     }
@@ -171,7 +171,7 @@ public class DataFiles {
                 for (int rowNumber = 1; rowNumber <= maxRowNumber; rowNumber++) {
                     Row row = sheet.getRow(rowNumber);
                     String name = getCellStringValue(row, 0);
-                    if (name == null) {
+                    if (StringUtils.isBlank(name)) {
                         throw new ConfigurationRuntimeException("CardName");
                     }
 
@@ -237,7 +237,7 @@ public class DataFiles {
                 for (int rowNumber = 1; rowNumber <= maxRowNumber; rowNumber++) {
                     Row row = sheet.getRow(rowNumber);
                     String name = getCellStringValue(row, 0);
-                    if (name == null) {
+                    if (StringUtils.isBlank(name)) {
                         throw new ConfigurationRuntimeException("CardName");
                     }
 
